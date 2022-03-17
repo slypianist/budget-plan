@@ -40,8 +40,6 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permissions'));
         return redirect()->route('roles.index')->with('message', 'Role has been created');
-
-
     }
 
     public function show($id){
@@ -53,22 +51,23 @@ class RoleController extends Controller
     }
 
     public function edit($id){
-        $role = Role::findorFail();
-        $permission = Permission::get();
+        $role = Role::find($id);
+        $permissions = Permission::get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
-        ->pluck('permissions_has_role.permission_id', 'permissions_has_role.permission_id')->all();
-        return view('roles.edit', compact('role', 'permission', 'rolePermissions'));
+        ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')->all();
+        return view('roles.edit', compact('role', 'permissions', 'rolePermissions'));
 
     }
 
     public function update(Request $request, Role $role){
         $request->validate([
             'name' => 'required',
-            'permission' => 'required',
+            'permissions' => 'required',
 
         ]);
 
-        $role->syncPermissions($request->input('permission'));
+      //  dd($request->all());
+        $role->syncPermissions($request->input('permissions'));
 
         return redirect()->route('roles.index')->with('message', 'role has been updated');
     }

@@ -55,11 +55,26 @@
                             @endif
                         @else
                                 <li><a class="nav-link" href="{{route('users.index')}}">Manage Users</a></li>
-                                <li><a class="nav-link" href="{{route('expense.index')}}">Manage Expense</a></li>
                                 <li><a class="nav-link" href="{{route('roles.index')}}">Manage Roles</a></li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Manage Expense</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="{{route('expense.create')}}">Create Expense</a></li>
+                                        <li><a class="dropdown-item" href="{{route('expense.index')}}">All Expense</a></li>
+                                      </ul>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Manage Budget</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" href="{{route('budget.create')}}">Create Budget</a></li>
+                                        <li><a class="dropdown-item" href="{{route('budget.index')}}">All Budget head</a></li>
+                                      </ul>
+                                </li>
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->fname }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">

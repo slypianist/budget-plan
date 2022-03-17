@@ -16,9 +16,17 @@ class CreateExpensesTable extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->onUpdate('cascade')->constrained();
+            $table->foreignId('budget_id')->onUpdate('cascade')->nullable()->constrained();
             $table->string('description');
             $table->text('comment')->nullable();
-            //$table->double('amount',10, 2);
+            $table->double('total',10, 2)->default(0.00);
+            $table->double('budget_exp_bal', 10, 2)->nullable();
+            $table->integer('exp_index')->default(0);
+            $table->integer('hod_approval')->default(0);
+            $table->integer('cfo_approval')->default(0);
+            $table->integer('budget_cleared')->default(0);
+            $table->integer('md_approval')->default(0);
+            $table->enum('status', ['APPROVED', 'DECLINED', 'HOLDING', 'PENDING'])->default('PENDING');
             $table->timestamps();
         });
     }

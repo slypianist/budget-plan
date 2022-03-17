@@ -15,6 +15,13 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function __construct()
+     {
+         $this->middleware('permission:user-list|user-create|user-show|user-edit|user-delete', ['only'=> ['index','store', 'show', 'edit', 'update', 'delete']]);
+
+     }
+
     public function index(Request $request)
     {
         $data = User::orderBy('id', 'DESC')->paginate(5);
@@ -49,11 +56,19 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required',
         ]);
+        if($request->hasFile('signature')){
+            $fileNameExtension = $request->file('signature')->getClientOriginalName();
+            $fileExtension = $request->file('signature')->getClientOriginalExtension();
+            $fileName = pathinfo($fileNameExtension, PATHINFO_FILENAME);
+            $nameToStore = $fileName.'_'.time().'.'.$fileExtension;
+            $path = $request->file('signature')->storeAs('/public/uploads/signatures', $fileName);
+        }
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
             'email' => $request->email,
             'dept' => $request->dept,
+            'signature' => $request->signature,
             'password' =>Hash::make($request->password),
         ]);
 

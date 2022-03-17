@@ -9,7 +9,7 @@
             </div>
             @include('includes.success')
             <table class="table table-bordered">
-                <thead>
+                <thead class="bg-success">
                     <tr>
                         <th>S/N</th>
                         <th>Name</th>

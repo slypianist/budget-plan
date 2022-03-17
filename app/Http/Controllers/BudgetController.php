@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class BudgetController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:budget-list|budget-create|budget-edit|budget-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:budget-create', ['only'=>['create', 'store']]);
+        $this->middleware('permission:budget-edit', ['only'=>['edit', 'update']]);
+        $this->middleware('permission:budget-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,6 +51,7 @@ class BudgetController extends Controller
         ]);
 
         $budget = $request->all();
+        $budget['balance'] = $request->amount;
         Budget::create($budget);
         return redirect()->route('budget.create')->with('message', 'Budget head has been created successfully');
     }

@@ -34,22 +34,32 @@
                                 <td>
                                     {{$expense->description}}
                                 </td>
-                                <td>
-                                    Repairs and maintenance
-                                </td>
-                                <td>
-                                    1,836,500.00
-                                </td>
+
+                                    @if (!empty($expense->budget->head))
+                                    <td>{{$expense->budget->head}}
+                                    @else
+                                        <td></td>
+                                    @endif
+
+
+                                    @if (!empty($expense->budget->amount))
+                                    <td>{{$expense->budget->amount}}</td>
+
+                                    @else
+                                        <td></td>
+                                    @endif
+
                             </tr>
                             <tr>
                                 <td>
 
                                 </td>
                                 <td colspan="2">
-                                    <p><b>Prior Utilization in Amount: </b></p>
-                                    <p>Current expense:</p>
-                                    <p>Current Expense(if approved):</p>
-                                    <p>Available budget:</p>
+                                    <p>Prior Utilization in Amount: <b>{{number_format($data['priorUtil'],2,'.',',')}}</b> </p>
+                                    <p>Current Expense(if approved): <strong>{{$data['curExpense']}}</strong></p>
+                                    <p>Total Expense(if current is approved): <strong>₦{{number_format($data['totalExp'],2,'.',',')}}</strong></p>
+
+                                    <p>Available budget: <strong>₦{{number_format($data['availBud'],2,'.',',')}}</strong> </p>
                                 </td>
 
                             </tr>
@@ -65,7 +75,7 @@
                                 </p>
                             </td>
                             <td colspan="2">
-                                <b>Utilization(% of budget)</b>
+                                Utilization(% of budget): {{number_format($data['percentUtil'],2,'.',',') }} <b>%</b>
                             </td>
                         </tr>
                     </tbody>
@@ -86,11 +96,16 @@
                                     {{$eitem->item}}
                                 </td>
                                 <td>
-                                    {{$eitem->amount}}
+                                    ₦{{$eitem->amount}}
                                 </td>
                             </tr>
 
                             @endforeach
+
+                            <tr>
+                                <td><h4>Total:</h4></td>
+                                <td><h4>₦{{number_format($expense->total,2,'.',',')}}</h4></td>
+                            </tr>
 
                         </tbody>
                     </table>
@@ -109,19 +124,50 @@
                         <td>
                             <p><b>Approved by:</b></p>
                             <p><b>Chief Executive Officer</b></p>
+                            <br>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="form-group">
-                               <h3>Comment</h3>
-                            <textarea name="comment" id="" cols="30" rows="5" class="form-control"></textarea>
+                               <h3>Comments</h3>
+                               <b>Kindly Pay into:</b>
+                               <p>
+                                  <strong>Name:</strong>  {{$vendor->name}}
+                               </p>
+                               <p>
+                                   <strong>Account Number:</strong> {{$vendor->account}}
+                               </p>
+                               <p>
+                                   <strong>Bank:</strong> {{$vendor->bank}}
+                               </p>
+
+                               @can('cfo-approval')
+                               <form action="{{route('expense.approvalcfo', $expense->id)}}" method="post">
+
+                                <input type="submit" value="Approve" class="btn btn-primary btn-lg">
+                                @csrf
+                                @method('PATCH')
+                               </form>
+                               @endcan
+
+                               @can('md-approval')
+                               <form action="{{route('expense.approvalmd', $expense->id)}}" method="post">
+
+                                <input type="submit" value="Approve" class="btn btn-primary btn-lg">
+                                @csrf
+                                @method('PATCH')
+
+                               </form>
+                               @endcan
+
+
+
 
                             </div>
 
                         </td>
                     </tr>
-
                 </table>
             </div>
         </div>

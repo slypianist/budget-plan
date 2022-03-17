@@ -16,7 +16,7 @@
                     <h3>Expense Overhead</h3>
                 </div>
                 <div class="card-body form-group">
-                    <form action="{{route('expense.store')}}" method="post" enctype="multipart/form-data">
+                    <form action="{{url('expense')}}" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             @if ($errors->any())
                                 <div class="alert alert-danger">
@@ -31,10 +31,10 @@
 
                             @endif
                             <label for="name" class="form-label"><strong>Expense Description</strong></label>
-                            <input type="text" name="description" id="" class="form-control" required>
+                            <input type="text" name="description" id="" class="form-control" value="{{$expense->description}}">
                         </div>
 
-                        {{-- <div class="mb-3">
+                        <div class="mb-3">
                             <label for="budget"><strong>Budget head</strong></label>
                             <select name="budget" id="" class="form-control">
                                 @foreach ($budgets as $budget)
@@ -42,8 +42,8 @@
                                 @endforeach
 
                             </select>
-
-                        </div> --}}
+                        </select>
+                        </div>
 
                         <label for="hod"><strong>Approving HOD</strong></label>
                         <div class="input-group mb-3" >
@@ -66,17 +66,20 @@
                                 </tr>
                             </thead>
                             <tbody id="tbody">
+                                @foreach ($ex_items as $item)
                                 <tr>
-                                    <td><input type="text" name="multi[0][qty]" class="form-control"></td>
-                                    <td><input type="text" name="multi[0][item]" class="form-control"></td>
-                                    <td><input type="text" name="multi[0][amount]" class="form-control" data-action="sumExpense"></td>
+                                    <td><input type="text" name="multi[0][qty]" class="form-control" value="{{$item->qty}}" ></td>
+                                    <td><input type="text" name="multi[0][item]" class="form-control" value="{{$item->item}}" ></td>
+                                    <td><input type="text" name="multi[0][amount]" class="form-control" value="{{$item->amount}}"></td>
                                 </tr>
+                                @endforeach
+
 
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Total</th>
-                                    <td colspan="3"><input type="text" name="total" class="form-control" id="totalex"aria-colspan="40" readonly></td>
+                                    <td colspan="3"><input type="text" name="total" class="form-control" aria-colspan="40"></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -96,16 +99,16 @@
                            <tbody id="tb">
                                <tr>
                                    <td>
-                                       <input type="text" name="name" id="" class="form-control" required>
+                                       <input type="text" name="name" id="" class="form-control" value="{{$vendors->name}}" required>
                                    </td>
                                    <td>
-                                       <input type="text" name="account" id="" class="form-control" required>
+                                       <input type="text" name="account" id="" class="form-control" value="{{$vendors->account}}" required>
                                    </td>
                                    <td>
-                                       <input type="text" name="bank" id="" class="form-control" required>
+                                       <input type="text" name="bank" id="" class="form-control" value="{{$vendors->bank}}" required>
                                    </td>
                                    <td>
-                                       <input type="file" name="invoice" id="" class="form-control">
+                                       <input type="file" name="invoice" id="" class="form-control" value="{{$vendors->invo}}">
                                    </td>
                                </tr>
                            </tbody>
@@ -149,7 +152,7 @@
 
             '<td>'+ '<input type="text" name="multi['+i+'][qty]" class="form-control"></td>' +
             '<td>' + '<input type="text" name="multi['+i+'][item]" class="form-control"></td>'+
-            '<td>'+ '<input type="text" name="multi['+i+'][amount]" class="form-control" data-action="sumExpense"></td>'+
+            '<td>'+ '<input type="text" name="multi['+i+'][amount]" class="form-control"></td>'+
             '<td>' + '<a href="#/" class="btn btn-danger btn-sm remove">-</a></td>'+
 
             '</tr>';
@@ -160,23 +163,8 @@
 
     $('#tbody').on('click', '.remove', function() {
         $(this).parent().parent().remove();
-        evaluateTotal();
 
     });
-
-    $('body').on('change', '[data-action="sumExpense"]', function() {
-  evaluateTotal();
-});
-
-    function evaluateTotal() {
-  var total = 0;
-  $('[data-action="sumExpense"]').each(function(_i, e) {
-    var val = parseFloat(e.value);
-    if (!isNaN(val))
-      total += val;
-  });
-  $('#totalex').val(total);
-}
 
     </script>
 

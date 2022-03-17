@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+        $data['user_expense'] = Expense::where('user_id', Auth::user()->id);
+        $data['expense_count'] = Expense::where('user_id', Auth::user()->id)->count();
+        return view('home', compact('data', 'user'));
     }
+
 }

@@ -28,7 +28,7 @@
 
 @endif
 
-<form action="{{route('users.store')}}" method="post">
+<form action="{{route('users.store')}}" method="post" enctype="multipart/form-data">
 
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-12 col-md-8">
@@ -60,6 +60,11 @@
             <div class="form-group">
                 <strong>Confirm Password</strong>
                 <input type="password" name="confirm-password" id="" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <strong>Signature</strong>
+                <input type="file" name="signature" id="">
             </div>
 
             <div class="form-group">
