@@ -61,14 +61,15 @@ class UserController extends Controller
             $fileExtension = $request->file('signature')->getClientOriginalExtension();
             $fileName = pathinfo($fileNameExtension, PATHINFO_FILENAME);
             $nameToStore = $fileName.'_'.time().'.'.$fileExtension;
-            $path = $request->file('signature')->storeAs('/public/uploads/signatures', $fileName);
+            $path = $request->file('signature')->storeAs('/public/uploads/signatures', $nameToStore);
         }
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
             'email' => $request->email,
             'dept' => $request->dept,
-            'signature' => $request->signature,
+            'designation' => $request->designation,
+            'signature' => $nameToStore,
             'password' =>Hash::make($request->password),
         ]);
 

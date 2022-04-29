@@ -17,6 +17,7 @@
                                 <th>Department</th>
                                 <th>Role</th>
                                 <th>Created</th>
+                                <th>Signature Specimen</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -35,9 +36,10 @@
                                 @endif
                                 </td>
                                 <td>{{$user->created_at}}</td>
+                                <td><img src="{{asset('storage/uploads/signatures/'.$user->signature)}}" width="70px" height="50px" alt=""></td>
                                 <td>
                                     <form action="{{route('users.destroy', $user->id)}}" method="POST">
-                                     <a href=""><button class="btn btn-danger btn-sm">Delete</button></a>
+                                     <a href=""><button class="btn btn-danger btn-sm" id="delUser">Delete</button></a>
                                      @csrf
                                      @method('DELETE')
 
@@ -53,6 +55,15 @@
     </div>
 
 </div>
+
+<script>
+let user = document.getElementById('delUser');
+
+user.addEventListener('click', function() {
+
+});
+
+</script>
 
 @endsection
 

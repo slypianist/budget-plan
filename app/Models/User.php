@@ -25,7 +25,9 @@ class User extends Authenticatable
         'fname',
         'lname',
         'dept',
-        'roles'
+        'roles',
+        'designation',
+        'signature'
     ];
 
     /**

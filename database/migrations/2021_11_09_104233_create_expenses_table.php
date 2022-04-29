@@ -22,6 +22,7 @@ class CreateExpensesTable extends Migration
             $table->double('total',10, 2)->default(0.00);
             $table->double('budget_exp_bal', 10, 2)->nullable();
             $table->integer('exp_index')->default(0);
+            $table->integer('apv_hod');
             $table->integer('hod_approval')->default(0);
             $table->integer('cfo_approval')->default(0);
             $table->integer('budget_cleared')->default(0);

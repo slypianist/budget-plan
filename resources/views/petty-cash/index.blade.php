@@ -57,7 +57,7 @@
                             @if (auth()->user()->can('expense-edit') && auth()->user()->can('expense-delete'))
                             <a href="{{route('expense.edit', $expense->id)}}"><button class="btn btn-primary btn-sm">Edit</button></a>
                             <form action="{{route('expense.destroy', $expense->id)}}" method="POST" style="display: inline">
-
+                                <input type="text" id="txt" value="{{$expense->budget_cleared}}" id="budgetCleared" onkeyup="manage()">
                              <button class="btn btn-danger btn-sm">Delete</button>
                                 @method('DELETE')
                                 @csrf
@@ -65,7 +65,7 @@
                             @endif
 
                             @can('budget-clear')
-                            <a href="{{route('budget.check', $expense->id)}}"><button class="btn btn-primary btn-sm" id="submit">Budget Clear</button></a>
+                            <a href="{{route('budget.check', $expense->id)}}"><button class="btn btn-primary btn-sm" id="submit" disabled>Budget Clear</button></a>
                             @endcan
                         </td>
 

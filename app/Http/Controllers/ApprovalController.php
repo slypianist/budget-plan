@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Budget;
 use App\Models\Expense;
+use App\Notifications\ApprovedExpense;
+use App\Notifications\CfoExpenseApproval;
+use App\Notifications\MdExpenseApproval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class ApprovalController extends Controller
 {
+    /**
+     * Set Permissions.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function __construct()
     {
         $this->middleware('permission:hod-approval', ['only' => ['hodApproval']]);
@@ -16,6 +25,12 @@ class ApprovalController extends Controller
         $this->middleware('permission:md-approval', ['only'=>['mdApproval']]);
         $this->middleware('permission:cfo-approval', ['only' => ['cfoApproval']]);
     }
+
+    /**
+     * Expense Approval by Head of Department.
+     *
+     * @return Flash messages
+     */
 
     public function hodApproval($id){
         $expense = Expense::where('id', $id)->get();
@@ -26,20 +41,36 @@ class ApprovalController extends Controller
 
     }
 
+    /**
+     * Display Budget Clearing Form.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function budgetClearForm($id){
         $expense = Expense::findOrFail($id);
         $budgets =  Budget::get(['id', 'head']);
         return view('budget.budget-clear', compact('expense','budgets'));
     }
 
+    /**
+     * Expense Budget Clearing Module.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
     public function budgetClear(Request $request, $id){
         $expense =Expense::findOrFail($id);
      //   dd($request->all());
+     // Check if expense has been cleared.
+     if($expense->budget_cleared == 0){
+
         $expense['budget_id'] = $request->budget;
         $b_id = $expense['budget_id'];
         $e_total = $expense->total;
 
         $budget = Budget::where('id', $b_id)->first();
+        $user = User::Permission('cfo-approval')->first();
+        // Check if there is prior expense
         if ($budget->prior_exp <= 0.00) {
             $budget->balance -=$e_total;
             $utilization = $e_total + $budget->total_prior;
@@ -61,28 +92,66 @@ class ApprovalController extends Controller
             $budget->save();
             $expense->budget_cleared = 1;
             $expense->save();
-
         }
-
+        // Send notification
+        $user->notify(new CfoExpenseApproval($expense));
         return redirect()->route('expense.index')->with('message', 'Your expense budget has been cleared successfully');
+
+     }else{
+         return redirect()->route('expense.index')->with('message', "Oops! Failed. This expense has already been budget cleared.");
+     }
+
     }
 
+    /**
+     * Expense Approval recommendation by CFO.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function cfoApprove($id){
         $expense =Expense::where('id', $id)->first();
-       // dd($expense);
+        if($expense->budget_cleared == 0){
+
+            return redirect()->route('expense.index')->with('message', 'Sorry Substantive CFO! This action cannot be completed. This expense has not been Budget Cleared.');
+
+        }else{
+
+            $user = User::Permission('MD-Approval')->first();
         $expense->cfo_approval = 1;
         $expense->save();
         // Send email notification to MD
-        return redirect()->route('expense.index')->with('message','You have recommended this expense for approval');
+        $user->notify(new MdExpenseApproval($expense));
+
+        return redirect()->route('expense.index')->with('message','You have successfully recommended this expense for approval');
+        }
+
     }
 
+    /**
+     * Expense Approval recommendation by MD.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function mdApprove($id){
         $expense =Expense::where('id', $id)->first();
-       // dd($expense);
+        // Get the user instance of initiator.
+       // $user = User::where('id', $expense->user_id)->first();
+       if($expense->cfo_approval == 0){
+
+        return redirect()->route('expense.index')->with('message', 'Sorry! This action cannot be completed. This expense has not been recommended for Approval by the CFO.');
+
+       }
+       else{
+
+        $user = User::Role('payment-initiator')->first();
         $expense->md_approval = 1;
         $expense->status = 'APPROVED';
         $expense->save();
-        // Send email notification to MD
+        // Send email notification
+        $user->notify(new ApprovedExpense($expense));
         return redirect()->route('expense.index')->with('message','You have approved this expense for execution');
+
+       }
+
     }
 }

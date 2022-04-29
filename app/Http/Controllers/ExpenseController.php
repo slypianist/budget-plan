@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Budget;
 use App\Models\Vendor;
 use App\Models\Expense;
 use App\Models\Expense_item;
+use App\Notifications\NewExpense;
 use Facade\FlareClient\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class ExpenseController extends Controller
@@ -18,10 +21,10 @@ class ExpenseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Expense $expenses)
+    public function index(Expense $expenses, Request $request)
     {
-        $expenses = Expense::with('budget')->get();//orderBy('id', 'DESC')->paginate(5);
-        return view('expense.index', compact($expenses, 'expenses'));
+        $expenses = Expense::with('budget')->orderBy('id', 'DESC')->paginate(4);
+        return view('expense.index', compact($expenses, 'expenses'))->with('i', ($request->input('page', 1)- 1) *5);;
     }
 
     /**
@@ -32,8 +35,10 @@ class ExpenseController extends Controller
     public function create()
     {
         $budgets = Budget::get(['id', 'head']);
+        $users = User::where('designation', 'HOD')->get(['id', 'fname', 'lname']);
+       // dd($users);
     // dd($budgets);
-        return view('expense.create', compact('budgets'));
+        return view('expense.create', compact('budgets', 'users'));
     }
 
     /**
@@ -48,9 +53,7 @@ class ExpenseController extends Controller
         $request->validate([
             'description' => 'required', 'string,',
             'comment' => 'nullable', 'string|',
-            'hod' => 'nullable', 'string',
-          //
-            'budget' => 'nullable', 'string',
+            'apv_hod' => 'required', 'integer',
             'multi.*.qty' => 'required',
             'multi.*.amount' => 'required',
             'multi.*.item' => 'required',
@@ -65,8 +68,7 @@ class ExpenseController extends Controller
         $expense['comment'] = $request->comment;
         $expense['total'] = $request->total;
         $expense['user_id'] = Auth::user()->id;
-       // $expense['hod'] = $request->hod;
-       // $expense['budget_id'] = $request->budget;
+        $expense['apv_hod'] = $request->apv_hod;
         $expense->save();
         foreach ($request->multi as $key => $value) {
             $expense->expense_items()->create($value);
@@ -104,6 +106,9 @@ class ExpenseController extends Controller
         $items = Expense_item::where('expense_id', $expense->id)->get();
         $vendor = Vendor::where('expense_id', $expense->id)->first();
         $budget = Budget::where('id', $expense->budget_id)->first();
+        $cfo = User::where('designation', 'CFO')->first();
+        $md = User::where('designation', 'MD')->first();
+       // Show Expense details without budget clearing.
         if(!$budget){
             if ($expense->exp_index == 1) {
                 $budget->total_prior = 0.00;
@@ -117,21 +122,26 @@ class ExpenseController extends Controller
             $data['totalExp'] = 0.00;
             $data['percentUtil'] = ($data['totalExp']/1)*100;
         }else {
+            // Show expense details that is budget cleared but the first expense on the budget head.
             if ($expense->exp_index == 1) {
                 $budget->total_prior = 0.00;
+
                 $data['priorUtil'] = $budget->total_prior;
             } else {
-                $data['priorUtil'] = $budget->total_prior;
+
+                //Show subsequent expenses that is budget cleared with details.
+
+                $data['priorUtil'] = $budget->amount-$expense->budget_exp_bal-$expense->total;
             }
             $data['totalBudget'] = $budget->total_prior + $expense->total;
             $data['curExpense'] = $expense->total;
             $data['availBud'] = $expense->budget_exp_bal;
-            $data['totalExp'] = $budget->total_prior + $expense->total;
+            $data['totalExp'] = $data['priorUtil'] + $expense->total;
             $data['percentUtil'] = ($data['totalExp']/$budget->amount)*100;
         }
 
 
-        return view('expense.show', compact('expense', 'items', 'vendor', 'budget', 'data'));
+        return view('expense.show', compact('expense', 'items', 'vendor', 'budget', 'data', 'cfo', 'md',));
     }
 
     /**
@@ -159,7 +169,7 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return "This is under development...";
     }
 
     /**
@@ -170,10 +180,22 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return "This is under  development...";
     }
 
-    public function sendExpense(){
+    public function sendExpense(Expense $expense){
+
+        $id = $expense->apv_hod;
+
+       $recipient = User::where('id', $id)->first();
+       dd($recipient);
+        $recipient->notify(new NewExpense($expense));
+     // Notification::send($recipient, new NewExpense($expense));
+
+      return redirect()->route('expense.index')->with('message', 'Your expense has been sent for approval');
+
+
+
 
     }
 }

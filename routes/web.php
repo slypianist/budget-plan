@@ -9,6 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +42,7 @@ Route::get('expense/{expense}/budget-clear', [ApprovalController::class,'budgetC
 Route::patch('expenses/{expense}/budget-clear', [ApprovalController::class,'budgetClear'])->name('budget.clear');
 Route::patch('expense/{expense}/approve', [ApprovalController::class, 'cfoApprove'])->name('expense.approvalcfo');
 Route::patch('expense/{expense}/approval', [ApprovalController::class, 'mdApprove'])->name('expense.approvalmd');
+Route::get('expenses/{expense}/sendexp', [ExpenseController::class, 'sendExpense'])->name('expense.send');
 
 Route::resource('users', UserController::class);
 

@@ -13,8 +13,11 @@
                     <tr>
                         <td>
 
-                            <p>Initiator: IT & ADMIN</p>
-                            <p>Name / Signature/ Date</p>
+                            <p>Initiator: {{$expense->user->fname}} {{$expense->user->lname}} </p>
+                            <p>Dept: {{$expense->user->dept}}</p>
+                            <p>Date/Signature: {{$expense->created_at}}</p>
+                            </p>
+
                         </td>
                         <td><p>Approving HOD:</p>
                             <p>Name / Signature / Date</p></td>
@@ -118,12 +121,24 @@
                     <h2>EXPENSE APPROVAL</h2>
                     <tr>
                         <td>
-                            <p><b>Recommended for approval</b></p>
-                            <p>Chief Finance Officer</p>
+                            <br><b>Recommended for approval</b>
+                            <br>Chief Finance Officer
+
+                            @if ($expense->cfo_approval)
+                            <br>{{$cfo->fname}} {{$cfo->lname}}
+                            <br><img src="{{asset('storage/uploads/signatures/'.$cfo->signature)}}" alt="" width="50%" height="50px" srcset="">
+
+                            @endif
                         </td>
                         <td>
-                            <p><b>Approved by:</b></p>
-                            <p><b>Chief Executive Officer</b></p>
+                            <br><b>Approved by:</b>
+                            <br>Chief Executive Officer
+                            @if ($expense->md_approval)
+                            <br>{{$md->fname}} {{$md->lname}}
+                            <br><img src="{{asset('storage/uploads/signatures/'.$md->signature)}}" alt="" width="50%" height="50px" srcset="">
+
+
+                            @endif
                             <br>
                         </td>
                     </tr>
@@ -154,7 +169,7 @@
                                @can('md-approval')
                                <form action="{{route('expense.approvalmd', $expense->id)}}" method="post">
 
-                                <input type="submit" value="Approve" class="btn btn-primary btn-lg">
+                                <input type="submit" value="Approve expense" class="btn btn-primary btn-lg">
                                 @csrf
                                 @method('PATCH')
 

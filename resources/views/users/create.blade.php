@@ -53,6 +53,11 @@
             </div>
 
             <div class="form-group">
+                <strong>Designation</strong>
+                <input type="text" name="designation" id="" class="form-control">
+            </div>
+
+            <div class="form-group">
                 <strong>Password</strong>
                 <input type="password" name="password" id="" class="form-control" required>
             </div>
@@ -64,7 +69,7 @@
 
             <div class="form-group">
                 <strong>Signature</strong>
-                <input type="file" name="signature" id="">
+                <input type="file" name="signature" id="" class="form-control">
             </div>
 
             <div class="form-group">
