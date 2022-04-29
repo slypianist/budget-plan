@@ -55,10 +55,10 @@
                         <td>{{$expense->status}}</td>
                         <td>
                             @if (auth()->user()->can('expense-edit') && auth()->user()->can('expense-delete'))
-                            <a href="{{route('expense.edit', $expense->id)}}"><button class="btn btn-primary btn-sm">Edit</button></a>
+                            {{-- <a href="{{route('expense.edit', $expense->id)}}"><button class="btn btn-primary btn-sm">Edit</button></a> --}}
                             <form action="{{route('expense.destroy', $expense->id)}}" method="POST" style="display: inline">
 
-                             <button class="btn btn-danger btn-sm">Delete</button>
+                             {{-- <button class="btn btn-danger btn-sm">Delete</button> --}}
                                 @method('DELETE')
                                 @csrf
                             </form>

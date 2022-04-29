@@ -26,7 +26,14 @@ Route::get('/', function () {
 });
 
 //Route::resource('expense', ExpenseController::class);
-Route::get('expenses/create', [ExpenseController::class, 'create'])->name('expense.create');
+
+
+Route::resource('users', UserController::class);
+
+Route::group(['middleware' => ['auth']], function(){
+   Route::resource('roles', RoleController::class);
+   Route::get('expenses', [ExpenseController::class, 'index'])->name('expense.index');
+   Route::get('expenses/create', [ExpenseController::class, 'create'])->name('expense.create');
 Route::post('expenses', [ExpenseController::class, 'store'])->name('expense.store');
 Route::get('expenses/{expense}', [ExpenseController::class, 'show'])->name('expense.show');
 Route::get('expenses/{expense}/edit', [ExpenseController::class, 'edit'])->name('expense.edit');
@@ -43,15 +50,6 @@ Route::patch('expenses/{expense}/budget-clear', [ApprovalController::class,'budg
 Route::patch('expense/{expense}/approve', [ApprovalController::class, 'cfoApprove'])->name('expense.approvalcfo');
 Route::patch('expense/{expense}/approval', [ApprovalController::class, 'mdApprove'])->name('expense.approvalmd');
 Route::get('expenses/{expense}/sendexp', [ExpenseController::class, 'sendExpense'])->name('expense.send');
-
-Route::resource('users', UserController::class);
-
-Route::group(['middleware' => ['auth']], function(){
-   Route::resource('roles', RoleController::class);
-   Route::get('expenses', [ExpenseController::class, 'index'])->name('expense.index');
-
-
-   Route::resource('products', ProductController::class);
 
 
 });

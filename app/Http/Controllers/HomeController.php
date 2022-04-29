@@ -23,12 +23,13 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $data['user_expense'] = Expense::where('user_id', Auth::user()->id);
+        $data['user_expense'] = Expense::where('user_id', Auth::user()->id)->paginate();
+      //  dd($data['user_expense']);
         $data['expense_count'] = Expense::where('user_id', Auth::user()->id)->count();
-        return view('home', compact('data', 'user'));
+        return view('home', compact('data', 'user'))->with('i', ($request->input('page', 1)- 1) *5);
     }
 
 }

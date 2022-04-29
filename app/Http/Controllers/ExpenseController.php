@@ -24,7 +24,7 @@ class ExpenseController extends Controller
     public function index(Expense $expenses, Request $request)
     {
         $expenses = Expense::with('budget')->orderBy('id', 'DESC')->paginate(4);
-        return view('expense.index', compact($expenses, 'expenses'))->with('i', ($request->input('page', 1)- 1) *5);;
+        return view('expense.index', compact($expenses, 'expenses'))->with('i', ($request->input('page', 1)- 1) *5);
     }
 
     /**
@@ -169,7 +169,7 @@ class ExpenseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return "This is under development...";
+        return "This action is yet to be activated by the admin...";
     }
 
     /**
@@ -180,7 +180,7 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
-        return "This is under  development...";
+        return "This action is yet to be activated by the Admin...";
     }
 
     public function sendExpense(Expense $expense){
@@ -188,11 +188,11 @@ class ExpenseController extends Controller
         $id = $expense->apv_hod;
 
        $recipient = User::where('id', $id)->first();
-       dd($recipient);
+       //dd($recipient);
         $recipient->notify(new NewExpense($expense));
      // Notification::send($recipient, new NewExpense($expense));
 
-      return redirect()->route('expense.index')->with('message', 'Your expense has been sent for approval');
+      return redirect()->route('home')->with('message', 'Your expense has been sent for approval');
 
 
 
