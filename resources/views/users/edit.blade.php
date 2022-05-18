@@ -48,6 +48,11 @@
             </div>
 
             <div class="form-group">
+                <strong>Designation</strong>
+                <input type="text" name="designation" id="" class="form-control" value="{{$user->designation}}">
+            </div>
+
+            <div class="form-group">
                 <strong>Password</strong>
                 <input type="password" name="password" id="" class="form-control">
             </div>

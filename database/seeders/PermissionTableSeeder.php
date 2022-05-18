@@ -36,6 +36,10 @@ class PermissionTableSeeder extends Seeder
             'hod-approval',
             'cfo-approval',
             'md-approval',
+            'hod-comment',
+            'bo-comment',
+            'cfo-comment',
+            'md-comment',
         ];
 
         foreach ($permissions as $permission) {

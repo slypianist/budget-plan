@@ -22,6 +22,7 @@ class AdminUserSeeder extends Seeder
             'lname' => 'Umole',
             'email' => 'sly.umole@gmail.com',
             'dept' => 'IT & Admin',
+            'designation' => 'HOD',
             'password' => Hash::make('password'),
             'created_at' => now(),
             'updated_at' => now()

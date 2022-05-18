@@ -33,6 +33,7 @@ class ApprovalController extends Controller
      */
 
     public function hodApproval($id){
+//dd("Expense approved for clearing");
         $expense = Expense::where('id', $id)->get();
         $user = $expense->user->email;
         $expense->hod_approval = 1;
@@ -60,7 +61,9 @@ class ApprovalController extends Controller
 
     public function budgetClear(Request $request, $id){
         $expense =Expense::findOrFail($id);
-     //   dd($request->all());
+        if($expense->hod_approval === 1){
+
+                 //   dd($request->all());
      // Check if expense has been cleared.
      if($expense->budget_cleared == 0){
 
@@ -101,6 +104,11 @@ class ApprovalController extends Controller
          return redirect()->route('expense.index')->with('message', "Oops! Failed. This expense has already been budget cleared.");
      }
 
+        }else{
+            return redirect()->route('expense.index')->with('message', "Action Failed! This expense has not been approved for budget clearing.");
+        }
+
+
     }
 
     /**
@@ -116,7 +124,7 @@ class ApprovalController extends Controller
 
         }else{
 
-            $user = User::Permission('MD-Approval')->first();
+            $user = User::Permission('md-approval')->first();
         $expense->cfo_approval = 1;
         $expense->save();
         // Send email notification to MD

@@ -194,8 +194,47 @@ class ExpenseController extends Controller
 
       return redirect()->route('home')->with('message', 'Your expense has been sent for approval');
 
+    }
 
+    public function addHodComment(Expense $expense, Request $request){
+        $expense->hod_comment = $request->comment;
+        $expense->save();
+        return response()->json(['message'=> 'Your comment has been added', 'status'=>200]);
 
+    }
+
+    public function addBoComment(Expense $expense, Request $request){
+        $expense->bo_comment = $request->comment;
+        $expense->save();
+        // Send notification
+        return response()->json(['status'=>'Successful']);
+
+    }
+
+    public function addCfoComment(Expense $expense, Request $request){
+        $expense->cfo_comment = $request->comment;
+        $expense->save();
+        // Send the notification
+
+        return response()->json(['message'=> "Your comment has been added", 'status'=>200]);
+
+    }
+
+    public function addMdComment(Expense $expense, Request $request){
+
+        $expense->md_comment = $request->comment;
+        $expense->status = "DECLINED";
+
+        $expense->save();
+
+        // Send notification
+
+        return response()->json(['status'=> 200, 'message'=>"Your comment has been added"]);
+
+    }
+
+    public function singleExpense(Expense $expense){
+        return response()->json($expense);
 
     }
 }

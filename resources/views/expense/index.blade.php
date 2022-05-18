@@ -8,7 +8,7 @@
         <div class="card-body">
             @include('includes.success')
             <table class="table table-bordered">
-                <thead class="bg-success" style="color: rgba(246, 243, 30, 0.938)">
+                <thead class="bg-success" style="color: rgb(255, 255, 255)">
                     <tr>
                         <th>S/N</th>
                         <th>Expense Description</th>

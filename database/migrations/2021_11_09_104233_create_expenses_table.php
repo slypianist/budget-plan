@@ -27,6 +27,10 @@ class CreateExpensesTable extends Migration
             $table->integer('cfo_approval')->default(0);
             $table->integer('budget_cleared')->default(0);
             $table->integer('md_approval')->default(0);
+            $table->string('hod_comment')->nullable();
+            $table->string('bo-comment')->nullable();
+            $table->string('cfo_comment')->nullable();
+            $table->string('md_comment')->nullable();
             $table->enum('status', ['APPROVED', 'DECLINED', 'HOLDING', 'PENDING'])->default('PENDING');
             $table->timestamps();
         });

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
+    <div class="alert alert-success" style="display: none"></div>
 <div class="row justify-center">
     <div class="col-md-12">
         <div class="card">
@@ -156,11 +157,31 @@
                                <p>
                                    <strong>Bank:</strong> {{$vendor->bank}}
                                </p>
+                               @if ($expense->md_comment)
+
+                               <h4>MD's COMMENT</h4>
+
+                               <p>{{$expense->md_comment}}</p>
+
+                               @endif
+                               {{-- @isset()
+
+                               @endisset --}}
+                               @can('hod-approval')
+
+                               <form action="{{route('expense.approvalhod', $expense->id)}}" method="POST">
+                                <input type="submit" value="Approve Expense for Clearing" class="btn btn-primary">
+                                @csrf
+                                @method('PATCH')
+                            </form>
+
+                               @endcan
 
                                @can('cfo-approval')
                                <form action="{{route('expense.approvalcfo', $expense->id)}}" method="post">
 
-                                <input type="submit" value="Approve" class="btn btn-primary btn-lg">
+                                <input type="submit" value="Recommend Expense for approval" class="btn btn-primary">
+                                <button type="button" id="cfoComment" class="btn btn-danger d-inline m-5 edit-form" data-id="{{$expense->id}}">Disapprove</button>
                                 @csrf
                                 @method('PATCH')
                                </form>
@@ -169,7 +190,8 @@
                                @can('md-approval')
                                <form action="{{route('expense.approvalmd', $expense->id)}}" method="post">
 
-                                <input type="submit" value="Approve expense" class="btn btn-primary btn-lg">
+                                <input type="submit" value="Approve Expense" class="btn btn-primary btn-md">
+                                <button type="button" id="addNewComment" class="btn btn-danger d-inline m-5 edit" data-id="{{$expense->id}}">Disapprove</button>
                                 @csrf
                                 @method('PATCH')
 
@@ -190,3 +212,57 @@
 </div>
 
 @endsection
+
+{{-- Modal Section for MD comment --}}
+
+@section('modal-section')
+<div class="modal fade" id="comment-model">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="comTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0)" method="post" id="addCommentForm" name="addCommentForm" class="form-horizontal">
+                    <input type="hidden" name="id" id="id">
+                    <div class="form-group">
+                        <label for="hod_com" id="comLbl"></label>
+                        <div class="col-sm-12">
+                            <textarea name="comment" id="comment" cols="30" rows="5" class="form-control"></textarea>
+                            <small id="error" style="display: none"></small>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-save" class="btn btn-success">Add Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- CFO Modal --}}
+
+<div class="modal fade" id="cfo-comment-model">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="cfoTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <form action="javascript:void(0)" method="post" id="addCfoForm" name="addCfoForm" class="form-horizontal">
+                    <input type="hidden" name="expid" id="expid">
+                    <div class="form-group">
+                        <label for="cfo_com" id="cfoLbl"></label>
+                        <div class="col-sm-12">
+                            <textarea name="cfoComment" id="cfoComment" cols="30" rows="5" class="form-control"></textarea>
+                            <small id="error" style="display: none"></small>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-cfo" class="btn btn-success">Add Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+
