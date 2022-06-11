@@ -25,8 +25,8 @@
                             <tr>
                                 <td>{{$role->id}}</td>
                                 <td>{{$role->name}}</td>
-                                <td><a href="{{route('roles.edit', $role->id)}}"><button class="btn btn-primary btn-sm">Edit</button></a>
-                                    <form action="{{route('roles.destroy', $role->id)}}" method="post"style="display: inline>
+                                <td><a href="{{route('roles.edit', $role->id)}}"><button class="btn btn-primary btn-sm ">Edit</button></a>
+                                    <form action="{{route('roles.destroy', $role->id)}}" method="post"style="display: inline">
                                         @csrf
                                         @method('DELETE')
                                     <a href=""><button class="btn btn-danger btn-sm">Delete</button></a>

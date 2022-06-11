@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Budget;
 use App\Models\Expense;
 use App\Notifications\ApprovedExpense;
+use App\Notifications\BoExpenseApproval;
 use App\Notifications\CfoExpenseApproval;
 use App\Notifications\MdExpenseApproval;
 use Illuminate\Http\Request;
@@ -34,11 +35,17 @@ class ApprovalController extends Controller
 
     public function hodApproval($id){
 //dd("Expense approved for clearing");
-        $expense = Expense::where('id', $id)->get();
-        $user = $expense->user->email;
+        $expense = Expense::where('id', $id)->first();
+       // dd($expense);
+        $user = User::Role('Budget-officer')->first();
+       // $user1 = $expense->user->email;
+      // dd($user);
         $expense->hod_approval = 1;
-        // Send Email notification to initiator and Budget Officer
-        return back()->with('message', 'Expense has been approved for budget clearing');
+        $expense->save();
+         // Send Email notification to initiator and Budget Officer
+        $user->notify(new BoExpenseApproval($expense));
+       
+        return redirect()->route('expense.index')->with('message', 'Expense has been approved for budget clearing');
 
     }
 
@@ -98,14 +105,14 @@ class ApprovalController extends Controller
         }
         // Send notification
         $user->notify(new CfoExpenseApproval($expense));
-        return redirect()->route('expense.index')->with('message', 'Your expense budget has been cleared successfully');
+        return redirect()->route('expense.index')->with('message', 'This expense budget has been cleared successfully');
 
      }else{
-         return redirect()->route('expense.index')->with('message', "Oops! Failed. This expense has already been budget cleared.");
+         return redirect()->route('expense.index')->with('error', "Oops! Failed. This expense has already been budget cleared.");
      }
 
         }else{
-            return redirect()->route('expense.index')->with('message', "Action Failed! This expense has not been approved for budget clearing.");
+            return redirect()->route('expense.index')->with('error', "Action Failed! This expense has not been approved by Dept. Head for budget clearing.");
         }
 
 
@@ -124,7 +131,7 @@ class ApprovalController extends Controller
 
         }else{
 
-            $user = User::Permission('md-approval')->first();
+            $user = User::Role('MD-Approval')->first();
         $expense->cfo_approval = 1;
         $expense->save();
         // Send email notification to MD

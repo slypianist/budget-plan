@@ -44,7 +44,7 @@ class BoExpenseApproval extends Notification
         $url = url('/expense/'.$this->expense->id);
         return (new MailMessage)
                     ->line('There is an expense voucher requiring your attention.')
-                    ->action('View voucher', url('/'))
+                    ->action('View voucher', $url)
                     ->line('Thank you for using our application!');
     }
 

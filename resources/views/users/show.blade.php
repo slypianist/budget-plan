@@ -2,7 +2,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
                     <h2>User Details</h2>
@@ -36,7 +36,7 @@
                                 @endif
                                 </td>
                                 <td>{{$user->created_at}}</td>
-                                <td><img src="{{asset('storage/uploads/signatures/'.$user->signature)}}" width="70px" height="50px" alt=""></td>
+                                <td><img src="{{asset('uploads/signatures/'.$user->signature)}}" width="70px" height="50px" alt=""></td>
                                 <td>
                                     <form action="{{route('users.destroy', $user->id)}}" method="POST">
                                      <a href=""><button class="btn btn-danger btn-sm" id="delUser">Delete</button></a>

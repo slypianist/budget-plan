@@ -18,13 +18,15 @@ class UserController extends Controller
 
      public function __construct()
      {
-         $this->middleware('permission:user-list|user-create|user-show|user-edit|user-delete', ['only'=> ['index','store', 'show', 'edit', 'update', 'delete']]);
-
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:user-create', ['only'=>['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only'=>['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
      }
 
     public function index(Request $request)
     {
-        $data = User::orderBy('id', 'DESC')->paginate(5);
+        $data = User::orderBy('id', 'DESC')->paginate(10);
         return view('users.index', compact('data'))->
     with('i', ($request->input('page', 1)- 1) *5);
     }
@@ -56,12 +58,14 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required',
         ]);
+
         if($request->hasFile('signature')){
             $fileNameExtension = $request->file('signature')->getClientOriginalName();
             $fileExtension = $request->file('signature')->getClientOriginalExtension();
             $fileName = pathinfo($fileNameExtension, PATHINFO_FILENAME);
             $nameToStore = $fileName.'_'.time().'.'.$fileExtension;
-            $path = $request->file('signature')->storeAs('/public/uploads/signatures', $nameToStore);
+          //  $path = $request->file('signature')->storeAs('/public/uploads/signatures', $nameToStore);
+          $path = $request->file('signature')->move(public_path('uploads/signature'), $nameToStore);
         }
         $user = User::create([
             'fname' => $request->fname,
@@ -129,6 +133,20 @@ class UserController extends Controller
         }else {
             $input = Arr::except($input, array('password'));
         }
+if(!empty($request->signature)){
+    if ($request->hasFile('signature')) {
+        $fileNameExtension = $request->file('signature')->hashName();
+        $fileExtension = $request->file('signature')->getClientOriginalExtension();
+        $fileName = pathinfo($fileNameExtension, PATHINFO_FILENAME);
+        $nameToStore = $fileName.'_'.time().'.'.$fileExtension;
+        $path = $request->file('signature')->move(public_path('uploads/signatures'), $nameToStore);
+    }
+    $input['signature'] = $nameToStore;
+
+}else {
+    $input = Arr::except($input, array('signature'));
+}
+        
         $user = User::findOrFail($id);
 
         $input = Arr::except($input, array('roles'));

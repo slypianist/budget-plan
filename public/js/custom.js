@@ -1,5 +1,5 @@
 /* MD Disapprove expense, comment and send notification module         */
-    $(document).ready(function () {
+    $(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -48,8 +48,7 @@
                 success: function (response) {
                    $('#btn-save').html('Add comment');
                    $('btn-save').attr('disabled', false);
-                   $('.alert').show();
-                   $('.alert').html(response.message).fadeOut(5000);
+                   window.alert(response.message);
                    window.location.reload();
                 }
             });
@@ -57,9 +56,15 @@
             }
         });
 
+        
+
+    });
+
+    $(function () {
+
         $('body').on('click', '.edit-form', function(){
 
-            let id = $(this).data('id');
+            let id = $(this).data('expid');
             $('#addCfoForm').trigger('reset');
 
             $.ajax({
@@ -75,23 +80,45 @@
 
                 }
             });
-        })
+        });
 
         $('body').on('click', '#btn-cfo', function(event){
+          //  console.log("Working");
 
-            let id = $('#id').val()
-            let comment = $('#cfoComment').val();
-            if (comment=="") {
-                let message = "Please this field is required";
-                $('#error').show().html(message).css({'color':'red'}).fadeOut(3000);
-
+            let id = $('#id').val();
+            let comments = $('#com').val();
+            let b = event.target;
+           // console.log(b);
+            if(comments==""){
+                let mgs = "Please this field is required." + b;
+                $('#errors').show().html(mgs).css({"color": "red"}).fadeOut(3000);
+                
             }else{
-                $('#btn-cfo').html('Please wait...').attr('disabled', true);
+               
+                $('#btn-cfo').html('Please wait...');
+                $('#btn-cfo').attr('disabled', true);
 
+                $.ajax({
+                    type: "post",
+                    url: `${id}/cfo-comment`,
+                    data: {comment:comments},
+                    dataType: "json",
+                    success: function (res) {
+                        $('#btn-cfo').html('Add comment')
+                        .attr('disabled', false);
+                        window.alert(res.message);
+                        window.location.reload();  
+                    }, 
+                    error: function(){
+                        window.alert("An error occurred. Please try again");
 
+                    }
+                });
             }
+        });
 
-        })
+
+        
     });
 
 

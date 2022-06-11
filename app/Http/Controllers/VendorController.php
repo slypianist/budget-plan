@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 
@@ -44,11 +45,14 @@ class VendorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Vendor $vendor)
     {
-        $vendor = Vendor::where('id', $id);
+     //   $vendor = Vendor::where('id', $id);
+     //$id = $expense->vendor_id;
+     //$vendor = Vendor::where('id', $id);
+     //return response()->json($vendor);
 
-        return view();
+        return view('expense.invoice', compact('vendor'));
     }
 
     /**

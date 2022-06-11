@@ -45,10 +45,11 @@
                     <a href="https://app.virtuegroup.com.ng/virtue-cloud" target="_blank" rel="noopener noreferrer"><b>VIRTUE-CLOUD APP</b></a>
                 </div>
                 <div class="col-md-3 home">
-                    <a href="expenses" target="_blank"><b>EXPENSE MANAGEMENT</b></a>
+                    <a href="home" target="_blank"><b> BANK EXPENSE MANAGEMENT</b></a>
                 </div>
                 <div class="col-md-3 home">
-                    <a href="petty-cash-expense" target="_blank"><b>HR MANAGEMENT</b></a>
+                    <a href="petty-cash-expense" target="_blank"><b>PETTY CASH MANAGEMENT</b></a>
+                    <br><small>(Under developement)</small>
                 </div>
             </div>
 

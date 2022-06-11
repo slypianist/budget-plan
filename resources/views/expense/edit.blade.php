@@ -36,7 +36,7 @@
 
                         <div class="mb-3">
                             <label for="budget"><strong>Budget head</strong></label>
-                            <select name="budget" id="" class="form-control">
+                            <select name="budget" id="" class="form-control" disabled>
                                 @foreach ($budgets as $budget)
                                 <option value="{{$budget->id}}">{{$budget->head}}</option>
                                 @endforeach

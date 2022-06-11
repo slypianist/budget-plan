@@ -44,9 +44,11 @@ class MdExpenseApproval extends Notification
     {
         $url = url('/expenses/'.$this->expense->id);
         return (new MailMessage)
-                    ->line('This expense has been recommended for approval and has been sent to your for final approval.')
+                    ->greeting('Hello sir,')
+                    ->line('This expense has been recommended for execution and has been sent to your for final approval.')
                     ->action('View Expense', $url)
-                    ->line('Thank you for using our application!');
+                    ->line('Thank you for using our application!')
+                    ->line('Best Regards.');
     }
 
     /**

@@ -28,7 +28,7 @@
 
 @endif
 
-<form action="{{route('users.update', $user->id)}}" method="post">
+<form action="{{route('users.update', $user->id)}}" method="post" enctype="multipart/form-data">
 
     <div class="row justify-content-center">
         <div class="col-xs-12 col-sm-12 col-md-8">
@@ -69,6 +69,12 @@
                         @endforeach
 
                     </select>
+            </div>
+
+            
+            <div class="form-group">
+                <strong><label for="signature">Signature</label></strong>
+                <input type="file" name="signature" id="signature" class="form-control">
             </div>
             <input type="submit" value="Submit" name="submit" class="btn btn-success btn-md">
         </div>

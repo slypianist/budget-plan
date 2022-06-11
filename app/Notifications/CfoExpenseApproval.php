@@ -44,7 +44,7 @@ class CfoExpenseApproval extends Notification
     {
         $url = url('/expenses/'.$this->expense->id);
         return (new MailMessage)
-                    ->line('There is an expense voucher requiring your attention.')
+                    ->line('Please there is an expense voucher requiring your attention.')
                     ->action('View Expense', $url)
                     ->line('Thank you for using our application!');
     }

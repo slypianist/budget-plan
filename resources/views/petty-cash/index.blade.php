@@ -12,10 +12,6 @@
                     <tr>
                         <th>S/N</th>
                         <th>Expense Description</th>
-                        <th>Budget Head</th>
-                        @can('budget-clear')
-                        <th>Budget Balance(₦)</th>
-                        @endcan
                         <th>Expense Amount(₦)</th>
                         <th>Date Created</th>
                         <th>Status</th>

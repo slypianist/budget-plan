@@ -22,10 +22,10 @@
                         </div>
                     @endif
 
-                    <div class="alert alert-success" role="alert">
+                    {{-- <div class="alert alert-success" role="alert">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
                         <p> {{ __('You are logged in!') }} </p>
-                    </div>
+                    </div> --}}
 
 
 
@@ -93,13 +93,17 @@
                                         <td>{{$expense->status}}</td>
                                         <td>
                                             @if (auth()->user()->can('expense-edit') && auth()->user()->can('expense-delete'))
-                                            <a href="{{route('expense.edit', $expense->id)}}"><button class="btn btn-primary btn-sm">Edit</button></a>
+                                            <a href="{{route('expense.edit', $expense->id)}}"><button class="btn btn-primary btn-sm mb-3">Edit</button></a>
+                                            
+                                            @endif
+
+                                            @if (auth()->user()->can('expense-create'))
+
                                             <form action="{{route('expense.send', $expense->id)}}" method="GET" style="display: inline">
 
-                                             <button class="btn btn-danger btn-sm">Send for approval</button>
-
-                                                @csrf
-                                            </form>
+                                                <button class="btn btn-danger btn-sm">Send for approval</button>
+                                                   @csrf
+                                               </form>
                                             @endif
 
 

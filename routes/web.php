@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
-
+use App\Http\Controllers\VendorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,16 +21,19 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 //Route::resource('expense', ExpenseController::class);
 
 
 Route::resource('users', UserController::class);
+Route::get('/', function () {
+    return view('welcome');
+});
+
 
 Route::group(['middleware' => ['auth']], function(){
+   
     Route::resource('roles', RoleController::class);
     Route::get('expenses', [ExpenseController::class, 'index'])->name('expense.index');
     Route::get('expenses/create', [ExpenseController::class, 'create'])->name('expense.create');
@@ -54,6 +57,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('expenses/{expense}/md-comment', [ExpenseController::class, 'addMdComment']);
     Route::post('expenses/{expense}/cfo-comment', [ExpenseController::class, 'addCfoComment']);
     Route::post('expenses/{expense}/show', [ExpenseController::class, 'singleExpense']);
+    Route::get('vendors/{vendor}', [VendorController::class, 'show'])->name('vendor.show');
+    Route::get('expense/pdf-show', [ExpenseController::class, 'showPdf'])->name('show.pdf');
 
 
 });
