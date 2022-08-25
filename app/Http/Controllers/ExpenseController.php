@@ -16,7 +16,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
-
+use NumberFormatter;
 
 class ExpenseController extends Controller
 {
@@ -119,8 +119,8 @@ class ExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Expense $expense)
-    {
+    public function show(Expense $expense){
+
         $items = Expense_item::where('expense_id', $expense->id)->get();
         $vendor = Vendor::where('expense_id', $expense->id)->first();
         $budget = Budget::where('id', $expense->budget_id)->first();
@@ -128,6 +128,7 @@ class ExpenseController extends Controller
         $md = User::where('designation', 'MD')->first();
         $hod = User::where('id', $expense->apv_hod)->first();
         $bo = User::role('Budget-officer')->first();
+        $f = new NumberFormatter('in', NumberFormatter::SPELLOUT);
        // dd($bo);
         //dd($hod->lname);
        // Show Expense details without budget clearing.
@@ -224,7 +225,6 @@ class ExpenseController extends Controller
 
             $id = $expense->apv_hod;
             $recipient = User::where('id', $id)->first();
-            //dd($recipient);
              $recipient->notify(new NewExpense($expense));
           // Notification::send($recipient, new NewExpense($expense));
            return redirect()->route('home')->with('message', 'Your expense has been sent for approval');
@@ -284,7 +284,7 @@ class ExpenseController extends Controller
         return response()->json($expense);
     }
 
-    // Show PDF 
+    // Export to PDF
 
     public function showPdf(Expense $expense){
 
@@ -328,6 +328,19 @@ class ExpenseController extends Controller
        $pdf = PDF::loadView('expense.expdf', compact('expense', 'items', 'vendor', 'budget', 'data', 'cfo', 'md'));
        
        return $pdf->download('expense.pdf');
+
+    }
+
+    public function updatePaymentStatus(Expense $expense){
+        if($expense->md_approval === 1){
+            $expense->payment_status = "PAID";
+        $expense->update();
+        return response()->json(['status'=>200, 'message'=>'successful', 'payment_status'=>$expense->payment_status]);
+
+        }else{
+        return response()->json(['status'=>404, 'message'=>'Not allowed. Expense has not been approved']);
+        }
+        
 
     }
 }

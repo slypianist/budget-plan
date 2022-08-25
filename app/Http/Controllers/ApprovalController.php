@@ -7,6 +7,7 @@ use App\Models\Budget;
 use App\Models\Expense;
 use App\Notifications\ApprovedExpense;
 use App\Notifications\BoExpenseApproval;
+use App\Notifications\BudgetClearRevert;
 use App\Notifications\CfoExpenseApproval;
 use App\Notifications\MdExpenseApproval;
 use Illuminate\Http\Request;
@@ -114,6 +115,57 @@ class ApprovalController extends Controller
         }else{
             return redirect()->route('expense.index')->with('error', "Action Failed! This expense has not been approved by Dept. Head for budget clearing.");
         }
+
+    }
+
+    public function revertBudget(Request $request, Expense $expense){
+
+        if($expense->hod_approval === 1){
+
+            //   dd($request->all());
+// Check if expense has been cleared.
+if($expense->budget_cleared == 1){
+
+   $expense['budget_id'] = $request->budget;
+   $b_id = $expense['budget_id'];
+   $e_total = $expense->total;
+
+   $budget = Budget::where('id', $b_id)->first();
+   $user = User::Permission('cfo-approval')->first();
+   // Check if there is prior expense
+   /* if ($budget->prior_exp <= 0.00) {
+       $budget->balance +=$e_total;
+       $utilization = $e_total - $budget->total_prior;
+       $budget->p_utilization = ($utilization/$budget->amount)*100;
+       $budget->prior_exp = $e_total;
+       $expense['budget_exp_bal'] = $budget->balance;
+       $budget->save();
+       $expense->budget_cleared = 1;
+       $expense->exp_index = 1;
+       $expense->save();
+
+   }else */if ($budget->prior_exp >= 1.00) {
+       $budget->balance -=$e_total;
+       $budget->total_prior += $budget->prior_exp;
+       $utilization = $e_total + $budget->total_prior;
+       $budget->p_utilization = ($utilization/$budget->amount)*100;
+       $budget->prior_exp = $e_total;
+       $expense['budget_exp_bal'] = $budget->balance;
+       $budget->save();
+       $expense->budget_cleared = 1;
+       $expense->save();
+   }
+   // Send notification
+   $user->notify(new BudgetClearRevert($expense));
+   return redirect()->route('expense.index')->with('message', 'Budget clearing for this expense has been reverted successfully');
+
+}else{
+    return redirect()->route('expense.index')->with('error', "Oops! Failed. This expense has already been budget cleared.");
+}
+
+   }else{
+       return redirect()->route('expense.index')->with('error', "Action Failed! This expense has not been approved by Dept. Head for budget clearing.");
+   }
 
 
     }

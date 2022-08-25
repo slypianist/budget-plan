@@ -132,7 +132,15 @@
 
                             <tr>
                                 <td><h4>Total:</h4></td>
-                                <td><h4>₦{{number_format($expense->total,2,'.',',')}}</h4></td>
+                                <td><h4>
+                                    ₦{{number_format($expense->total,2,'.',',')}}
+                                </h4>
+                                <p>
+                                   
+                                    {{$f->$eitem}}
+                                
+                                </p>
+                            </td>
                             </tr>
 
                         </tbody>

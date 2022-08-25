@@ -32,6 +32,7 @@ class CreateExpensesTable extends Migration
             $table->string('cfo_comment')->nullable();
             $table->string('md_comment')->nullable();
             $table->enum('status', ['APPROVED', 'DECLINED', 'HOLDING', 'PENDING'])->default('PENDING');
+            $table->enum('pay-status', ['PAID', 'NOT PAID'])->default('NOT PAID');
             $table->timestamps();
         });
     }

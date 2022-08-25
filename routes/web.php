@@ -3,6 +3,8 @@
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\PettyCashController;
+use App\Http\Controllers\PettyExpenseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
@@ -30,6 +32,14 @@ Route::resource('users', UserController::class);
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('petty-expense', [PettyExpenseController::class, 'index'])->name('pettyexpense.index');
+Route::get('petty-expense/create', [PettyExpenseController::class, 'create'])->name('pettyexpense.create');
+Route::post('petty-expense', [PettyExpenseController::class, 'store'])->name('pettyexpense.store');
+Route::get('petty-expense/{petty}', [PettyExpenseController::class, 'show'])->name('pettyexpense.show');
+Route::get('petty-expense/{petty}/edit', [PettyExpenseController::class, 'edit'])->name('pettyexpense.edit');
+Route::patch('petty-expense/{petty}', [PettyExpenseController::class, 'update'])->name('pettyexpense.update');
+Route::delete('petty-expense/{petty}', [PettyExpenseController::class, 'destroy'])->name('pettyexpense.destroy');
 
 
 Route::group(['middleware' => ['auth']], function(){
@@ -59,6 +69,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('expenses/{expense}/show', [ExpenseController::class, 'singleExpense']);
     Route::get('vendors/{vendor}', [VendorController::class, 'show'])->name('vendor.show');
     Route::get('expense/pdf-show', [ExpenseController::class, 'showPdf'])->name('show.pdf');
+    Route::patch('expenses/expense/{expense}/pay', [ExpenseController::class, 'updatePaymentStatus'])->name('payment');
 
 
 });

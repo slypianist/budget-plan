@@ -2,25 +2,23 @@
 
 namespace App\Notifications;
 
-use App\Models\Expense;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class MdExpenseApproval extends Notification
+class BudgetClearRevert extends Notification
 {
     use Queueable;
-    public $expense;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Expense $expense)
+    public function __construct()
     {
-        $this->expense = $expense;
+        //
     }
 
     /**
@@ -42,20 +40,10 @@ class MdExpenseApproval extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/expenses/'.$this->expense->id);
-        $title = $this->expense->description;
-        $amount = $this->expense->total;
-        $name = $notifiable->fname;
-        
         return (new MailMessage)
-                    ->greeting('Hello '. $name.',')
-                    ->subject('Approval for '. $title)
-                    ->line('This expense has been recommended for execution and has been sent to you for final approval.')
-                    ->line('Name: '. $title)
-                    ->line('Amount: '. $amount)
-                    ->action('View Voucher', $url)
-                    ->line('Thank you for using our application!')
-                    ->line('Best Regards.');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**

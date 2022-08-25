@@ -14,8 +14,8 @@
             $.ajax({
                 type: "post",
                 url: `${id}/show`,
-                data: {id: id},
-                dataType: "json",
+/*                 data: {id: id},
+ */                dataType: "json",
                 success: function (response) {
                     $('#comment-model').modal('show');
                     $('#comTitle').html('Add Comment');
@@ -117,9 +117,35 @@
             }
         });
 
+        // Set Expense payment status to Paid.
 
-        
+$('.pay').on('click', function (e) {
+    let test = $(this).data('status')
+  let states =  $(this).hide().next().show();
+
+    $.ajax({
+        type: "patch",
+        url: `/expenses/expense/${test}/pay`,
+        data: {id:test},
+        dataType: "json",
+        success: function (response) {
+            $('.pstatus').html(response.payment_status)
+            
+            window.alert(response.payment_status)
+           // window.location.reload();
+            
+        },
+        complete: function(){
+            $('.loader').hide();
+            $('.pstatus').show();
+           
+        }
     });
+    
+      
+    });
+        
+});
 
 
 

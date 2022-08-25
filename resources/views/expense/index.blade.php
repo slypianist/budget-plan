@@ -67,7 +67,23 @@
                             @can('budget-clear')
                             <a href="{{route('budget.check', $expense->id)}}"><button class="btn btn-primary btn-sm" id="submit">Budget Clear</button></a>
                             @endcan
+
+                            @can('expense-payment-status')
+
+                            @if ($expense->payment_status === "NOT PAID")
+
+                            <button class="btn btn-primary btn-sm my-2 pay" data-status="{{$expense->id}}">Pay</button>
+                            <div class="spinner-border text-success loader"  role="status" style="display:none">
+                                <span class="sr-only">Loading...</span>
+                            @else
+                            <span class="badge badge-success pstatus">{{$expense->payment_status}}</span>
+                            @endif
+
+                            </div>
+                                
+                            @endcan
                         </td>
+                        
 
                     </tr>
                     @endforeach

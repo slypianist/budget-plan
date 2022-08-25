@@ -45,12 +45,19 @@ class NewExpense extends Notification
     public function toMail($notifiable)
     {
         $url = url('/expenses/'.$this->expense->id);
+        $title = $this->expense->description;
+        $amount = $this->expense->total;
+        $name = $notifiable->fname;
         return (new MailMessage)
-                    ->line('You have an Expense Voucher requiring your attention')
-                    ->action('View Expense', $url)
+                    ->greeting('Hello '. $name.',')
+                    ->subject('New Expense: '. $title)
+                    ->line('You have an Expense Voucher requiring your attention.')
+                    ->line('Name: '. $title)
+                    ->line('Amount: N'. $amount)
+                    ->action('View Voucher', $url)
                     ->line('Thank you for using our application!');
     }
-
+    
     /**
      * Get the array representation of the notification.
      *

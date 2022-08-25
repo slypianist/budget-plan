@@ -34,7 +34,7 @@
 
                     Total Expense Initiated: {{$data['expense_count']}}
 
-                    <p>You have initiated {{$data['expense_count']}} Expense.</p>
+                    <p>You have initiated {{$data['expense_count']}} Expense Items.</p>
 
 
 
@@ -57,6 +57,7 @@
                                         <th>Expense Amount(₦)</th>
                                         <th>Date Created</th>
                                         <th>Status</th>
+                                        <th>Payment Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -91,6 +92,17 @@
                                         <td>{{number_format($expense->total,2,'.',',')}}</td>
                                         <td>{{date_format($expense->created_at, 'D, d-m-Y')}}</td>
                                         <td>{{$expense->status}}</td>
+                                        <td>
+                                        
+                                            @if ($expense->payment_status == "NOT PAID")
+
+                                            <span class="badge badge-danger">{{$expense->payment_status}}</span>
+                                                
+                                            @else
+                                            <span class="badge badge-success">{{$expense->payment_status}}</span>
+                                            @endif
+                                        
+                                        </td>
                                         <td>
                                             @if (auth()->user()->can('expense-edit') && auth()->user()->can('expense-delete'))
                                             <a href="{{route('expense.edit', $expense->id)}}"><button class="btn btn-primary btn-sm mb-3">Edit</button></a>

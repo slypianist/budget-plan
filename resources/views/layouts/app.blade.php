@@ -70,8 +70,13 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Manage Expense</a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" href="{{route('expense.create')}}">Create Expense</a></li>
+                                        <h4 class="dropdown-header"> BANK EXPENSE</h4>
+                                        <li><a class="dropdown-item" href="{{route('expense.create')}}">Create Bank Expense</a></li>
                                         <li><a class="dropdown-item" href="{{route('expense.index')}}">All Expense</a></li>
+                                        <div class="dropdown-divider"></div>
+                                        <h4 class="dropdown-header">PETTY EXPENSE</h4>
+                                        <a class="dropdown-item" href="{{route('pettyexpense.create')}}">Create Petty Expense</a>
+                                        <a class="dropdown-item" href="{{route('pettyexpense.index')}}">All Petty Expense</a>
                                       </ul>
                                 </li>
 

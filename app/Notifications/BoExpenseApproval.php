@@ -42,8 +42,15 @@ class BoExpenseApproval extends Notification
     public function toMail($notifiable)
     {
         $url = url('/expense/'.$this->expense->id);
+        $title = $this->expense->description;
+        $amount = $this->expense->total;
+        $name = $notifiable->fname;
         return (new MailMessage)
+                    ->greeting('Hello '.$name.',')
+                    ->subject('Budget Clear for: '.$title)
                     ->line('There is an expense voucher requiring your attention.')
+                    ->line('Expense: '.$title)
+                    ->line('Amount: '.$amount)
                     ->action('View voucher', $url)
                     ->line('Thank you for using our application!');
     }

@@ -42,8 +42,15 @@ class ApprovedExpense extends Notification
     public function toMail($notifiable)
     {
         $url = url('/expenses/'. $this->expense->id);
+        $title = $this->expense->description;
+        $amount = $this->expense->total;
+        $name = $notifiable->fname;
         return (new MailMessage)
+                    ->greeting($name.',')
+                    ->subject('Approved: '.$title)
                     ->line('This expense has been approved for execution.')
+                    ->line('Expense: '. $title)
+                    ->line('Amount: '. $amount)
                     ->action('Expense Details', $url)
                     ->line('Thank you for using our application!');
     }

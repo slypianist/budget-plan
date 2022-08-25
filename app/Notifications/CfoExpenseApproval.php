@@ -43,9 +43,16 @@ class CfoExpenseApproval extends Notification
     public function toMail($notifiable)
     {
         $url = url('/expenses/'.$this->expense->id);
+        $title = $this->expense->description;
+        $amount = $this->expense->total;
+        $name = $notifiable->fname;
         return (new MailMessage)
-                    ->line('Please there is an expense voucher requiring your attention.')
-                    ->action('View Expense', $url)
+                    ->greeting('Hello '.$name.',')
+                    ->subject('Expense: '. $title)
+                    ->line('Please there is an expense voucher requiring your recommendation for approval.')
+                    ->line('Expense: '. $title)
+                    ->line('Amount: '. $amount)
+                    ->action('View Voucher', $url)
                     ->line('Thank you for using our application!');
     }
 
