@@ -13,14 +13,41 @@
                         <th>S/N</th>
                         <th>Expense Description</th>
                         <th>Expense Amount(₦)</th>
-                        <th>Date Created</th>
                         <th>User Dept</th>
+                        <th>Date Created</th>
                         <th>Prepared by</th>
                         <th>Approved by</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @foreach ($pettys as $petty)
+
+                    <tr>
+                        <td>{{++$i}}</td>
+                        <td><a href="{{route('pettyexpense.show', $petty->id)}}">{{$petty->description}}</a></td>
+                        <td>{{$petty->total}}</td>
+                        <td>{{$petty->user->dept}}</td>
+                        <td>{{date($petty->created_at)}}</td>
+                        <td>{{$petty->prep_by}}</td>
+                        <td>{{$petty->apprv_by}}</td>
+                        <td>{{$petty->status}}</td>
+                        <td>
+                            <a href="{{route('pettyexpense.edit', $petty->id)}}"><button class="btn btn-success btn-sm">Edit</button></a>
+                            <form action="{{route('pettyexpense.destroy', $petty->id)}}" method="post">
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                                @method('DELETE')
+                                @csrf
+                            </form>
+                        </td>
+
+                    </tr>
+                        
+                    @endforeach
+                    
+                </tbody>
+            </table>
                 
 <div class="d-flex justify-content-center">
  {{--   {{ $expenses->links() }} --}}

@@ -31,20 +31,21 @@
 
                             @endif
                             <label for="name" class="form-label"><strong>Expense Description</strong></label>
-                            <input type="text" name="description" id="" class="form-control" required>
+                            <input type="text" name="description" id="" class="form-control">
                         </div>
 
 
                         <label for="hod"><strong>Approving HOD</strong></label>
                         <div class="input-group mb-3" >
 
-                            <select name="apv_hod" id="" class="form-control">
+                            <select name="apprv_by" id="" class="form-control">
                                 @foreach ($users as $user)
                                 <option value="{{$user->id}}">{{$user->fname}} {{$user->lname}} </option>
                                 @endforeach
 
                             </select>
                         </div>
+                        
                         <label for="Expense Description"><strong>Expense Description</strong></label>
                 <div class="mb-3">
 
@@ -61,10 +62,10 @@
                             </thead>
                             <tbody id="tbody">
                                 <tr>
-                                    <td><input type="text" name="multi[0][qty]" class="form-control multi" id="qty"></td>
-                                    <td><input type="text" name="multi[0][item]" class="form-control multi" id="item"></td>
-                                    <td><input type="text" name="multi[0][rate]" class="form-control multi" id="rate"></td>
-                                    <td><input type="text" name="multi[0][amount]" class="form-control multi amount"  id="amount"></td>
+                                    <td><input type="text" name="multi[0][qty]" class="form-control multi" id="qty" required></td>
+                                    <td><input type="text" name="multi[0][item]" class="form-control multi" id="item" required></td>
+                                    <td><input type="text" name="multi[0][rate]" class="form-control multi" id="rate" required></td>
+                                    <td><input type="text" name="multi[0][amount]" class="form-control multi amount"  id="amount" readonly></td>
                                 </tr>
 
                             </tbody>
@@ -131,10 +132,10 @@
         ++i;
         var tr = '<tr>' +
 
-            '<td>'+ '<input type="text" name="multi['+i+'][qty]" class="form-control multi" id="qty"></td>' +
-            '<td>' + '<input type="text" name="multi['+i+'][item]" class="form-control multi" id="item"></td>'+
-            'td'+ '<td><input type="text" name="multi['+i+'][rate]" class="form-control multi" id="rate"></td>'+
-            '<td>'+ '<input type="text" name="multi['+i+'][amount]" class="form-control amount multi" data-action="sumExpense" id="amount"></td>'+
+            '<td>'+ '<input type="text" name="multi['+i+'][qty]" class="form-control multi" id="qty" required></td>' +
+            '<td>' + '<input type="text" name="multi['+i+'][item]" class="form-control multi" id="item" required></td>'+
+            'td'+ '<td><input type="text" name="multi['+i+'][rate]" class="form-control multi" id="rate" required></td>'+
+            '<td>'+ '<input type="text" name="multi['+i+'][amount]" class="form-control amount multi" data-action="sumExpense" id="amount" readonly></td>'+
             '<td>' + '<a href="#/" class="btn btn-danger btn-sm remove">-</a></td>'+
 
             '</tr>';

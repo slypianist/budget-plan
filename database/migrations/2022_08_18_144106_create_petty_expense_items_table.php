@@ -13,9 +13,14 @@ class CreatePettyExpenseItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('petty__expense_items', function (Blueprint $table) {
+        Schema::create('petty_expense_items', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('petty_expense_id')->onDelete('cascade')->constrained();
+            $table->string('item');
+            $table->double('qty');
+            $table->double('rate');
+            $table->double('amount');
+          //  $table->timestamps();
         });
     }
 
